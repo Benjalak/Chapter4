@@ -1,6 +1,7 @@
 
 import com.pamarin.chapter4.Ip;
 import com.pamarin.chapter4.Op;
+import com.pamarin.chapter4.Patient;
 import com.pamarin.chapter4.YesNo;
 import java.lang.reflect.Method;
 import org.junit.Test;
@@ -17,60 +18,36 @@ import static org.junit.Assert.*;
  */
 public class SumAvgReflectionPatientT {
 
-    private int sum(Ip ip) throws Exception {
-        Method[] methods = ip.getClass().getMethods();
+    //sum / n        
+    private float average(Patient patient) throws Exception {
+        return ((float) sum(patient)) / count(patient);
+    }
+
+    private int count(Patient patient) throws Exception {
+        Method[] methods = patient.getClass().getMethods();
+        int count = 0;
+        for (Method method : methods) {
+            if (method.getName().startsWith("getRole")) {
+                count = count + 1;
+            }
+        }
+        return count;
+    }
+
+    private int sum(Patient patient) throws Exception {
+        Method[] methods = patient.getClass().getMethods();
         int sum = 0;
         for (Method method : methods) {
             if (method.getName().startsWith("getRole")) {
-                YesNo yn = (YesNo) method.invoke(ip);
+                YesNo yn = (YesNo) method.invoke(patient);
                 sum = sum + yn.getScore();
             }
         }
         return sum;
-    }
-    
-    private int sum(Op ip) throws Exception {
-        Method[] methods = ip.getClass().getMethods();
-        int sum = 0;
-        for (Method method : methods) {
-            if (method.getName().startsWith("getRole")) {
-                YesNo yn = (YesNo) method.invoke(ip);
-                sum = sum + yn.getScore();
-            }
-        }
-        return sum;
-    }
-    
-    private float avg(Ip ip) throws Exception {
-        Method[] methods = ip.getClass().getMethods();
-        int sum = 0;
-        float avg = 0;
-        for (Method method : methods) {
-            if (method.getName().startsWith("getRole")) {
-                YesNo yn = (YesNo) method.invoke(ip);
-                sum = sum + yn.getScore();
-                avg = sum/5;
-            }
-        }
-        return avg;
-    }
-    
-    private float avg(Op ip) throws Exception {
-        Method[] methods = ip.getClass().getMethods();
-        int sum = 0;
-        float avg = 0;
-        for (Method method : methods) {
-            if (method.getName().startsWith("getRole")) {
-                YesNo yn = (YesNo) method.invoke(ip);
-                sum = sum + yn.getScore();
-                avg = sum/7;
-            }
-        }
-        return avg;
     }
 
     @Test
-    public void sumIp1Test() throws Exception {
+    public void sum1Test() throws Exception {
         Ip ip = new Ip();
         ip.setRole1(YesNo.YES);
         ip.setRole2(YesNo.YES);
@@ -79,10 +56,11 @@ public class SumAvgReflectionPatientT {
         ip.setRole5(YesNo.YES);
 
         assertEquals(3, sum(ip));
+        assertEquals(0.6, average(ip), 0.05);
     }
 
     @Test
-    public void sumIp2Test() throws Exception {
+    public void sum2Test() throws Exception {
         Ip ip = new Ip();
         ip.setRole1(YesNo.YES);
         ip.setRole2(YesNo.YES);
@@ -91,241 +69,21 @@ public class SumAvgReflectionPatientT {
         ip.setRole5(YesNo.YES);
 
         assertEquals(5, sum(ip));
+        assertEquals(1, average(ip), 0);
     }
 
     @Test
-    public void sumIp3Test() throws Exception {
-        Ip ip = new Ip();
-        ip.setRole1(YesNo.YES);
-        ip.setRole2(YesNo.YES);
-        ip.setRole3(YesNo.NO);
-        ip.setRole4(YesNo.YES);
-        ip.setRole5(YesNo.NO);
+    public void sum3Test() throws Exception {
+        Op op = new Op();
+        op.setRole1(YesNo.YES);
+        op.setRole2(YesNo.YES);
+        op.setRole3(YesNo.YES);
+        op.setRole4(YesNo.YES);
+        op.setRole5(YesNo.YES);
+        op.setRole6(YesNo.YES);
+        op.setRole7(YesNo.YES);
 
-        assertEquals(3, sum(ip));
-    }
-    
-    @Test
-    public void sumIp4Test() throws Exception {
-        Ip ip = new Ip();
-        ip.setRole1(YesNo.YES);
-        ip.setRole2(YesNo.NO);
-        ip.setRole3(YesNo.YES);
-        ip.setRole4(YesNo.YES);
-        ip.setRole5(YesNo.NO);
-
-        assertEquals(3, sum(ip));
-    }
-    
-    @Test
-    public void sumIp5Test() throws Exception {
-        Ip ip = new Ip();
-        ip.setRole1(YesNo.NO);
-        ip.setRole2(YesNo.YES);
-        ip.setRole3(YesNo.NO);
-        ip.setRole4(YesNo.NO);
-        ip.setRole5(YesNo.YES);
-
-        assertEquals(2, sum(ip));
-    }
-    
-    @Test
-    public void sumOp1Test() throws Exception {
-        Op ip = new Op();
-        ip.setRole1(YesNo.YES);
-        ip.setRole2(YesNo.YES);
-        ip.setRole3(YesNo.YES);
-        ip.setRole4(YesNo.YES);
-        ip.setRole5(YesNo.YES);
-        ip.setRole6(YesNo.YES);
-        ip.setRole7(YesNo.YES);
-
-        assertEquals(7, sum(ip));
-    }
-
-    @Test
-    public void sumOp2Test() throws Exception {
-        Op ip = new Op();
-        ip.setRole1(YesNo.YES);
-        ip.setRole2(YesNo.NO);
-        ip.setRole3(YesNo.NO);
-        ip.setRole4(YesNo.NO);
-        ip.setRole5(YesNo.YES);
-        ip.setRole6(YesNo.YES);
-        ip.setRole7(YesNo.YES);
-
-        assertEquals(4, sum(ip));
-    }
-    
-    @Test
-    public void sumOp3Test() throws Exception {
-        Op ip = new Op();
-        ip.setRole1(YesNo.YES);
-        ip.setRole2(YesNo.YES);
-        ip.setRole3(YesNo.YES);
-        ip.setRole4(YesNo.YES);
-        ip.setRole5(YesNo.YES);
-        ip.setRole6(YesNo.YES);
-        ip.setRole7(YesNo.YES);
-
-        assertEquals(7, sum(ip));
-    }
-    
-    @Test
-    public void sumOp4Test() throws Exception {
-        Op ip = new Op();
-        ip.setRole1(YesNo.YES);
-        ip.setRole2(YesNo.YES);
-        ip.setRole3(YesNo.NO);
-        ip.setRole4(YesNo.YES);
-        ip.setRole5(YesNo.YES);
-        ip.setRole6(YesNo.YES);
-        ip.setRole7(YesNo.YES);
-
-        assertEquals(6, sum(ip));
-    }
-    
-    @Test
-    public void sumOp5Test() throws Exception {
-        Op ip = new Op();
-        ip.setRole1(YesNo.NO);
-        ip.setRole2(YesNo.NO);
-        ip.setRole3(YesNo.YES);
-        ip.setRole4(YesNo.YES);
-        ip.setRole5(YesNo.YES);
-        ip.setRole6(YesNo.YES);
-        ip.setRole7(YesNo.YES);
-
-        assertEquals(5, sum(ip));
-    }
-    
-    @Test
-    public void avgIp1Test() throws Exception {
-        Ip ip = new Ip();
-        ip.setRole1(YesNo.YES);
-        ip.setRole2(YesNo.YES);
-        ip.setRole3(YesNo.NO);
-        ip.setRole4(YesNo.NO);
-        ip.setRole5(YesNo.YES);
-
-        assertEquals(0.6, avg(ip), 1);
-    }
-    
-    @Test
-    public void avgIp2Test() throws Exception {
-        Ip ip = new Ip();
-        ip.setRole1(YesNo.YES);
-        ip.setRole2(YesNo.YES);
-        ip.setRole3(YesNo.YES);
-        ip.setRole4(YesNo.YES);
-        ip.setRole5(YesNo.YES);
-
-        assertEquals(1, avg(ip), 1);
-    }
-
-    @Test
-    public void avgIp3Test() throws Exception {
-        Ip ip = new Ip();
-        ip.setRole1(YesNo.YES);
-        ip.setRole2(YesNo.YES);
-        ip.setRole3(YesNo.NO);
-        ip.setRole4(YesNo.YES);
-        ip.setRole5(YesNo.NO);
-
-        assertEquals(0.6, avg(ip), 1);
-    }
-
-    @Test
-    public void avgIp4Test()throws Exception  {
-        Ip ip = new Ip();
-        ip.setRole1(YesNo.YES);
-        ip.setRole2(YesNo.NO);
-        ip.setRole3(YesNo.YES);
-        ip.setRole4(YesNo.YES);
-        ip.setRole5(YesNo.NO);
-
-        assertEquals(0.6, avg(ip), 1);
-    }
-
-    @Test
-    public void avgIp5Test() throws Exception {
-        Ip ip = new Ip();
-        ip.setRole1(YesNo.NO);
-        ip.setRole2(YesNo.YES);
-        ip.setRole3(YesNo.NO);
-        ip.setRole4(YesNo.NO);
-        ip.setRole5(YesNo.YES);
-
-        assertEquals(0.4, avg(ip), 1);
-    }
-    
-    @Test
-    public void avgOp1Test() throws Exception {
-        Op ip = new Op();
-        ip.setRole1(YesNo.YES);
-        ip.setRole2(YesNo.YES);
-        ip.setRole3(YesNo.YES);
-        ip.setRole4(YesNo.YES);
-        ip.setRole5(YesNo.YES);
-        ip.setRole6(YesNo.YES);
-        ip.setRole7(YesNo.YES);
-
-        assertEquals(1, avg(ip), 1);
-    }
-
-    @Test
-    public void avgOp2Test() throws Exception {
-        Op ip = new Op();
-        ip.setRole1(YesNo.YES);
-        ip.setRole2(YesNo.NO);
-        ip.setRole3(YesNo.NO);
-        ip.setRole4(YesNo.NO);
-        ip.setRole5(YesNo.YES);
-        ip.setRole6(YesNo.YES);
-        ip.setRole7(YesNo.YES);
-
-        assertEquals(0.6, avg(ip), 1);
-    }
-    
-    @Test
-    public void avgOp3Test() throws Exception {
-        Op ip = new Op();
-        ip.setRole1(YesNo.YES);
-        ip.setRole2(YesNo.YES);
-        ip.setRole3(YesNo.YES);
-        ip.setRole4(YesNo.YES);
-        ip.setRole5(YesNo.YES);
-        ip.setRole6(YesNo.YES);
-        ip.setRole7(YesNo.YES);
-
-        assertEquals(1, avg(ip), 1);
-    }
-    
-    @Test
-    public void avgOp4Test() throws Exception {
-        Op ip = new Op();
-        ip.setRole1(YesNo.YES);
-        ip.setRole2(YesNo.YES);
-        ip.setRole3(YesNo.NO);
-        ip.setRole4(YesNo.YES);
-        ip.setRole5(YesNo.YES);
-        ip.setRole6(YesNo.YES);
-        ip.setRole7(YesNo.YES);
-
-        assertEquals(0.9, avg(ip), 1);
-    }
-    
-    @Test
-    public void avgOp5Test() throws Exception {
-        Op ip = new Op();
-        ip.setRole1(YesNo.NO);
-        ip.setRole2(YesNo.NO);
-        ip.setRole3(YesNo.YES);
-        ip.setRole4(YesNo.YES);
-        ip.setRole5(YesNo.YES);
-        ip.setRole6(YesNo.YES);
-        ip.setRole7(YesNo.YES);
-
-        assertEquals(0.7, avg(ip), 1);
+        assertEquals(7, sum(op));
+        assertEquals(1, average(op), 0);
     }
 }
