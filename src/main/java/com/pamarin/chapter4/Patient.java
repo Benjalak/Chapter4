@@ -1,17 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.pamarin.chapter4;
 
 import java.util.Date;
 import java.util.Objects;
 
-/**
- *
- * @author offie
- */
 public class Patient {
     
     private String hcode;
